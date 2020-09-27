@@ -4,6 +4,8 @@ using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
+using System.CodeDom;
 
 namespace MyList
 {
@@ -11,6 +13,23 @@ namespace MyList
     {
         static void Main(string[] args)
         {
+            MyStackList<string> shoppingList = new MyStackList<string>();
+            shoppingList.Push("Bread");
+            shoppingList.Push("Butter");
+            shoppingList.Push("Tea");
+            shoppingList.Push("Coffee");
+            shoppingList.Push("Sugar");
+
+            foreach (var item in shoppingList)
+            {
+                Console.WriteLine(item);
+            }
+            Console.WriteLine();
+            string header = shoppingList.Peek();
+            Console.WriteLine(header);
+
+            Console.WriteLine();
+            Console.WriteLine(shoppingList[3]);
         }
     }
 
@@ -21,13 +40,26 @@ namespace MyList
             Data = data;
         }
         public T Data { get; set; }
+
         public Node<T> Next { get; set; }
     }
 
-    public class NodeStack<T> : IEnumerable<T>
+    public class MyStackList<T> : IEnumerable<T>
     {
         Node<T> head;
         int count;
+
+        public T this[int index]
+        {
+            get
+            {
+                if (index >= Count)
+                    throw new InvalidOperationException("Stack is empty");
+                return (this.ToArray()[index]);
+            }
+        }
+
+
 
         public bool IsEmpty
         {
