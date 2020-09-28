@@ -54,8 +54,14 @@ namespace MyList
             get
             {
                 if (index >= Count)
-                    throw new InvalidOperationException("Stack is empty");
-                return (this.ToArray()[index]);
+                    throw new InvalidOperationException("Unknown index");
+                int i = 0;
+                foreach (var item in this)
+                {
+                    if (i == index) return item;
+                    i++;
+                }
+                return this[index];
             }
         }
 
