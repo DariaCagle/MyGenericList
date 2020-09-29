@@ -1,116 +1,45 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
-using System.CodeDom;
 
 namespace MyList
 {
     class Program
     {
+        public delegate bool FilterHandler(string s);
+
+        public static bool TrueFunc(string s)
+        {
+            return true;
+        }
+
         static void Main(string[] args)
         {
             MyStackList<string> shoppingList = new MyStackList<string>();
-            shoppingList.Push("Bread");
-            shoppingList.Push("Butter");
-            shoppingList.Push("Tea");
-            shoppingList.Push("Coffee");
-            shoppingList.Push("Sugar");
+
+            MyStackList<string> expelled = new MyStackList<string>();
+
+            FilterHandler filterHandler = new FilterHandler(TrueFunc);
+
+            Filter(filterHandler, "Bread", shoppingList, expelled);
+            Filter(filterHandler, "Butter", shoppingList, expelled);
+            Filter(filterHandler, "Tea", shoppingList, expelled);
+            Filter(filterHandler, "Coffee", shoppingList, expelled);
+            Filter(filterHandler, "Sugar", shoppingList, expelled);
 
             foreach (var item in shoppingList)
             {
                 Console.WriteLine(item);
             }
-            Console.WriteLine();
-            string header = shoppingList.Peek();
-            Console.WriteLine(header);
-
-            Console.WriteLine();
-            Console.WriteLine(shoppingList[3]);
         }
-    }
 
-    public class Node<T>
-    {
-        public Node(T data)
+        public static void Filter(FilterHandler filterHandler, string s, MyStackList<string> shoppingList, MyStackList<string> expelled)
         {
-            Data = data;
-        }
-        public T Data { get; set; }
-
-        public Node<T> Next { get; set; }
-    }
-
-    public class MyStackList<T> : IEnumerable<T>
-    {
-        Node<T> head;
-        int count;
-
-        public T this[int index]
-        {
-            get
+            if (filterHandler(s))
             {
-                if (index >= Count)
-                    throw new InvalidOperationException("Unknown index");
-                int i = 0;
-                foreach (var item in this)
-                {
-                    if (i == index) return item;
-                    i++;
-                }
-                return this[index];
+                shoppingList.Push(s);
             }
-        }
-
-
-
-        public bool IsEmpty
-        {
-            get { return count == 0; }
-        }
-        public int Count
-        {
-            get { return count; }
-        }
-
-        public void Push(T item)
-        {
-            Node<T> node = new Node<T>(item);
-            node.Next = head;
-            head = node;
-            count++;
-        }
-        public T Pop()
-        {
-            if (IsEmpty)
-                throw new InvalidOperationException("Stack is emplty");
-            Node<T> temp = head;
-            head = head.Next;
-            count--;
-            return temp.Data;
-        }
-        public T Peek()
-        {
-            if (IsEmpty)
-                throw new InvalidOperationException("Stack is empty");
-            return head.Data;
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return ((IEnumerable)this).GetEnumerator();
-        }
-
-        IEnumerator<T> IEnumerable<T>.GetEnumerator()
-        {
-            Node<T> current = head;
-            while (current != null)
+            else
             {
-                yield return current.Data;
-                current = current.Next;
+                expelled.Push(s);
             }
         }
     }
