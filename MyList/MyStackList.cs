@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace MyList
 {
+
     public class MyStackList<T> : IEnumerable<T> where T : class
     {
         Node<T> head;
@@ -29,7 +30,13 @@ namespace MyList
                 return result;
             }
         }
+        public delegate bool FilterHandler(T item);
 
+        FilterHandler filterHandler = TrueFunc;
+        public static bool TrueFunc(T item)
+            {
+                return true; //some logic
+            }
 
 
         public bool IsEmpty
@@ -43,10 +50,18 @@ namespace MyList
 
         public void Push(T item)
         {
-            Node<T> node = new Node<T>(item);
-            node.Next = head;
-            head = node;
-            count++;
+
+            if (filterHandler(item))
+            {
+                Node<T> node = new Node<T>(item);
+                node.Next = head;
+                head = node;
+                count++;
+            }
+            else
+            {
+
+            }
         }
         public T Pop()
         {
