@@ -15,7 +15,7 @@ namespace MyList
             get
             {
                 if (index >= Count)
-                    throw new InvalidOperationException("Unknown index");
+                    throw new IndexOutOfRangeException("Unknown index");
                 int i = 0;
                 T result = default(T);
                 foreach (var item in this)
