@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace MyList
 {
@@ -33,11 +34,31 @@ namespace MyList
 
         public delegate bool FilterHandler(T item);
 
-        FilterHandler filterHandler = TrueFunc;
-        public static bool TrueFunc(T item)
+        public FilterHandler filterHandler = TrueFunc;
+        public static bool TrueFunc(T item)  //some logic
             {
-                return true; //some logic
+            Thread.Sleep(500);
+            Random random = new Random();
+            if (random.Next(0, 100) < 50)
+            {
+                return false;
             }
+            return true;
+            
+        }
+
+        public static MyStackList<T> filter(MyStackList<T>list, FilterHandler filterhandler)
+        {
+            var filtered = new MyStackList<T>();
+            foreach(var item in list)
+            {
+                if (list.filterHandler(item))
+                {
+                    filtered.Push(item);
+                }
+            }
+            return filtered;
+        }
 
 
         public bool IsEmpty
@@ -52,13 +73,10 @@ namespace MyList
 
         public void Push(T item)
         {
-            if (filterHandler(item))
-            {
                 Node<T> node = new Node<T>(item);
                 node.Next = head;
                 head = node;
                 count++;
-            }
         }
 
         public delegate void RemoveNodeHandler(T item);

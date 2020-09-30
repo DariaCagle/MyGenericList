@@ -32,6 +32,17 @@ namespace MyList
             {
                 Console.WriteLine(item);
             }
+
+            Console.WriteLine();
+
+            var filteredList = MyStackList<string>.filter(shoppingList, shoppingList.filterHandler);
+
+            foreach (var item in filteredList)
+            {
+                Console.WriteLine(item);
+            }
+
         }
+
     }
 }
