@@ -30,6 +30,7 @@ namespace MyList
                 return result;
             }
         }
+
         public delegate bool FilterHandler(T item);
 
         FilterHandler filterHandler = TrueFunc;
@@ -43,6 +44,7 @@ namespace MyList
         {
             get { return count == 0; }
         }
+
         public int Count
         {
             get { return count; }
@@ -58,11 +60,8 @@ namespace MyList
                 head = node;
                 count++;
             }
-            else
-            {
-
-            }
         }
+
         public T Pop()
         {
             if (IsEmpty)
