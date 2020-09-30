@@ -7,8 +7,8 @@ namespace MyList
 
     public class MyStackList<T> : IEnumerable<T> where T : class
     {
-        Node<T> head;
-        int count;
+        public Node<T> head;
+        public int count;
 
         public T this[int index]
         {
@@ -17,7 +17,7 @@ namespace MyList
                 if (index >= Count)
                     throw new IndexOutOfRangeException("Unknown index");
                 int i = 0;
-                T result = default(T);
+                T result = default;
                 foreach (var item in this)
                 {
                     if (i == index)
@@ -52,7 +52,6 @@ namespace MyList
 
         public void Push(T item)
         {
-
             if (filterHandler(item))
             {
                 Node<T> node = new Node<T>(item);
@@ -62,15 +61,21 @@ namespace MyList
             }
         }
 
+        public delegate void RemoveNodeHandler(T item);
+        public event RemoveNodeHandler AddToRemoveList;
+        
+
         public T Pop()
         {
             if (IsEmpty)
                 throw new InvalidOperationException("Stack is emplty");
-            Node<T> temp = head;
+            Node<T> previous = head;
             head = head.Next;
             count--;
-            return temp.Data;
+            AddToRemoveList?.Invoke(previous.Data);
+            return previous.Data;
         }
+
         public T Peek()
         {
             if (IsEmpty)
